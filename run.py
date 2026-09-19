@@ -150,6 +150,14 @@ def pixelate(img: Image.Image, params: dict, pl_token: str) -> Image.Image | Non
     init_image_strength 가 높을수록 원본을 그대로 '픽셀화'한다. config 의 [pixellab] 테이블이
     그대로 바디가 되므로 direction/outline/seed 같은 필드도 코드 수정 없이 추가할 수 있다.
     """
+    size = params.get("image_size") or {}
+    want = (size.get("width"), size.get("height"))
+    if None not in want and img.size != want:
+        # PixelLab 은 init_image 가 image_size 와 정확히 같지 않으면 422 를 낸다.
+        # 이 단계의 입력은 아직 픽셀 아트가 아니므로 축소 품질이 좋은 LANCZOS 로 줄인다.
+        # ([apiframe] aspect_ratio 와 image_size 의 비율이 다르면 여기서 찌그러진다)
+        img = img.resize(want, Image.LANCZOS)
+
     body = {**params, "init_image": {"type": "base64", "base64": _to_b64(img)}}
     r = requests.post(f"{PL}/create-image-pixflux", json=body,
                       headers={"Authorization": f"Bearer {pl_token}"}, timeout=300)
@@ -166,9 +174,6 @@ def pixelate(img: Image.Image, params: dict, pl_token: str) -> Image.Image | Non
         print(f"  [pl] 응답에 이미지가 없습니다: {data}")
         return None
     out = Image.open(io.BytesIO(base64.b64decode(b64)))
-
-    size = params.get("image_size") or {}
-    want = (size.get("width"), size.get("height"))
     if None not in want and out.size != want:
         # 픽셀 아트는 NEAREST 로만 리사이즈한다. 보간하면 경계가 뭉개진다.
         out = out.resize(want, Image.NEAREST)

@@ -87,7 +87,7 @@ out/pixel/000_narrow-two-story-ramen-noodle-shop.png   # 픽셀화 + 배경 투�
 | 키 | 설명 |
 |---|---|
 | `init_image_strength` | **1~999.** 999 = 원본을 최대한 그대로 픽셀화. 낮추면 PixelLab 이 자기 해석을 섞는다 |
-| `image_size` | 최대 400×400. 픽셀 스프라이트 실제 해상도 |
+| `image_size` | 최대 400×400. 픽셀 스프라이트 실제 해상도. **원본은 이 크기로 자동 축소해서 보낸다**(PixelLab 이 크기가 다르면 거부함) — `[apiframe] aspect_ratio` 와 비율을 맞춰라, 다르면 찌그러진다 |
 | `view` | `side` / `low top-down` / `high top-down` |
 | `description` | 원본이 지배하므로 일반적인 문장이면 된다. 테마별로 바꿀 필요 없다 |
 | `seed` | 넣으면 같은 입력에 같은 결과 (재현용) |
