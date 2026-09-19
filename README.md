@@ -79,6 +79,45 @@ out/pixel/000_narrow-two-story-ramen-noodle-shop.png   # 픽셀화 + 배경 투�
 - 원하지 않는 요소는 금지어로 박아주세요 (`no perspective`, `no side walls`).
 - 적지 않으면 매번 갈리는 것(간판 언어 등)은 명시해주세요 (`all signage text in English`).
 
+### 다른 소재로 바꾸는 예시
+
+`subjects`만 바꾸면 안 됩니다. 기본 프리셋의 `style`에는 `grey concrete walls`, `flat rooftop`처럼
+건물 전용 단어가 들어있어서, 소재를 바꾸면 **`subjects` / `swatch` / `style` / `[pixellab] description`
+네 개가 같이 움직여야** 합니다. 시점이 달라지면 `view`와 `image_size`도 함께 바꿔주세요.
+
+탑다운 차량 스프라이트로 바꾸는 예시입니다.
+
+```toml
+swatch = "car-swatch.png"       # 위에서 내려다본 차량 예시 한 장
+
+subjects = [
+  "yellow taxi sedan",
+  "rusty pickup truck",
+  "police cruiser with light bar",
+  "delivery van with roll-up rear door",
+  "armored cash transport truck",
+]
+
+style = """
+pixel art game sprite, top-down vehicle sprite, seen directly from above, orthographic, \
+no perspective, full vehicle silhouette visible, no tilt, flat even daylight, \
+solid local colors, matte, clean outline, limited palette, plain white background, sprite asset
+"""
+
+[pixellab]
+description = "top-down vehicle seen from above, flat even daylight, plain background"
+view = "high top-down"
+image_size = { width = 128, height = 128 }   # 차량은 건물보다 작아도 됩니다
+init_image_strength = 999
+```
+
+아이템 아이콘이라면 `subjects`를 `"health potion in a glass vial"` 같은 명사구로 두고,
+`style`에 `item icon, centered, single object, side view`를 넣은 뒤
+`view = "side"`, `image_size = { width = 64, height = 64 }`로 맞추시면 됩니다.
+
+소재를 완전히 갈아엎을 때는 `out_dir`도 따로 잡아주세요 (`out_dir = "out-vehicles"`).
+번호가 기존 결과물 뒤에 이어 붙어서 섞이는 것을 막을 수 있습니다.
+
 ## 파라미터
 
 **`[pixellab]` 테이블에 적은 키는 그대로 PixelLab 요청 바디가 됩니다.** 필드를 추가해도 코드를 고칠 필요가 없습니다.
